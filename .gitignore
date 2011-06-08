@@ -1,2 +1,4 @@
 *.egg-info/
 tempest_forums.sql
+dev.ini
+prod.ini
