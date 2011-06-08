@@ -1,5 +1,6 @@
 import mongoengine as e
 from datetime import datetime
+import hashlib
 
 class User(e.Document):
     smf_id = e.IntField()
@@ -19,6 +20,13 @@ class User(e.Document):
     password = e.StringField(max_length=64)
     salt = e.StringField(max_length=10)
     hash_name = e.StringField(default='sha256')
+
+    def verify_password(self, passwd):
+        """Returns True if the password was correct, False if not.
+        """
+        pwhash = hashlib.sha1(self.username.lower() + passwd).hexdigest()
+        return pwhash == self.password
+
 
 class Group(e.Document):
     name = e.StringField()
