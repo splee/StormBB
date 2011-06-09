@@ -6,6 +6,7 @@ class User(e.Document):
     smf_id = e.IntField()
     username = e.StringField(max_length=200, unique=True)
     display_name = e.StringField(max_length=200, required=True)
+
     email = e.EmailField(unique=True)
     custom_title = e.StringField(max_length=200)
     location = e.StringField(max_length=200)
