@@ -29,5 +29,6 @@ class Topic(e.Document):
 class Message(e.Document):
     topic = e.ReferenceField(Topic)
     board = e.ReferenceField(Board)
+    author = e.ReferenceField('User')
     created = e.DateTimeField(default=datetime.now)
     body = e.StringField()
