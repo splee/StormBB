@@ -9,8 +9,7 @@ def includeme(config):
     config.add_route('user_login', 'login')
     config.add_route('user_logout', 'logout')
 
-@view_config(route_name='user_login', renderer='login.mak',
-             request_method='GET')
+@view_config(route_name='user_login', renderer='login.mak', request_method='GET')
 @view_config(renderer='login.mak', context='pyramid.exceptions.Forbidden')
 def login(request):
     if request.path == request.route_path('user_login'):

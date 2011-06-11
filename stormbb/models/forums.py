@@ -5,6 +5,9 @@ class Category(e.Document):
     name = e.StringField()
     order = e.IntField()
 
+    def boards(self):
+        return Board.objects(category=self).order_by('order')
+
 class Board(e.Document):
     category = e.ReferenceField(Category)
     name = e.StringField()
@@ -18,12 +21,16 @@ class Board(e.Document):
     post_groups = e.ListField(e.StringField())
     mod_groups = e.ListField(e.StringField())
 
+    def topics(self):
+        return Topic.objects(board=self).order_by('-last_update')
+
 class Topic(e.Document):
     board = e.ReferenceField(Board)
     is_sticky = e.BooleanField(default=False)
     is_locked = e.BooleanField(default=False)
     creator = e.ReferenceField('User')
     last_author = e.ReferenceField('User')
+    last_update = e.DateTimeField()
     reply_count = e.IntField(default=0)
     view_count = e.IntField(default=0)
 

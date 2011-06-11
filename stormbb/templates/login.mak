@@ -11,7 +11,7 @@ function login() {
 
 	$.post('/login', login_data, function(data) {
 		if (data.status == 'ok') {
-			window.location = "/";
+			window.location = "${url}";
 		} else {
 			var error = $('#error');
 			error.text(data.msg);

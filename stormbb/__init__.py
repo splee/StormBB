@@ -1,5 +1,5 @@
 from stormbb.resources import Root
-from stormbb.views import user
+from stormbb.views import user, root
 from pyramid.config import Configurator
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
@@ -36,12 +36,14 @@ def main(global_config, **settings):
                           renderer_globals_factory=renderer_globals,
                           authentication_policy=authn,
                           authorization_policy=authz)
-    config.add_view('stormbb.views.my_view',
-                    context='stormbb:resources.Root',
-                    renderer='stormbb:templates/index.mak')
+    #config.add_view('stormbb.views.my_view',
+    #                context='stormbb:resources.Root',
+    #                renderer='stormbb:templates/index.mak')
 
     config.add_static_view('static', 'stormbb:static')
 
+    # root views
+    config.include(root)
     # user routes
     config.include(user)
 
