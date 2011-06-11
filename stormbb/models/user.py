@@ -22,9 +22,12 @@ class User(e.Document):
     salt = e.StringField(max_length=10)
     hash_name = e.StringField(default='sha256')
 
+    groups = e.ListField(e.StringField())
+
     def verify_password(self, passwd):
         """Returns True if the password was correct, False if not.
         """
+        # NOTE: This is the shitty SMF encryption. We will switch to OAuth.
         pwhash = hashlib.sha1(self.username.lower() + passwd).hexdigest()
         return pwhash == self.password
 

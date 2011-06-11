@@ -14,8 +14,9 @@ class Board(e.Document):
     topic_count = e.IntField(default=0)
     post_count = e.IntField(default=0)
 
-    member_groups = e.ListField(e.ReferenceField('Group'))
-    public_access = e.BooleanField(default=False)
+    read_groups = e.ListField(e.StringField())
+    post_groups = e.ListField(e.StringField())
+    mod_groups = e.ListField(e.StringField())
 
 class Topic(e.Document):
     board = e.ReferenceField(Board)
