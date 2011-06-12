@@ -14,7 +14,8 @@ class Request(PyramidRequest):
     @reify
     def user(self):
         # TODO: Figure out a way of doing this sans globals. --Lee 2011-06-12
-        user_id = authn.cookie.identify(self)
+        identity = authn.cookie.identify(self)
+        user_id = identity['userid']
         if user_id:
             return User.objects.with_id(user_id)
 

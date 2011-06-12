@@ -24,6 +24,7 @@ class Board(e.Document):
     def topics(self):
         return Topic.objects(board=self).order_by('-is_sticky', '-last_update')
 
+
 class Topic(e.Document):
     board = e.ReferenceField(Board)
     title = e.StringField()

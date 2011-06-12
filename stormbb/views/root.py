@@ -1,4 +1,4 @@
-from stormbb.models import User, Category, Board, Topic, Message
+from stormbb.models import Category, Board, Topic
 from pyramid.view import view_config
 
 def includeme(config):
@@ -9,9 +9,14 @@ def includeme(config):
 
 @view_config(route_name='index', renderer='index.mak')
 def index(request):
-    # for now, just get the first category and boards.
-    cat = Category.objects.order_by('order').first()
-    return dict(categories=[cat])
+    if request.user:
+        groups = request.user.groups
+    else:
+        groups = ['everyone']
+    boards = Board.objects(read_groups__in=groups)
+    cat_ids = [c.id for c in boards.distinct('category')]
+    categories = Category.objects(id__in=cat_ids).order_by('order')
+    return dict(categories=categories)
 
 @view_config(route_name='board', renderer='board.mak')
 def board(request):

@@ -58,7 +58,7 @@ def format_tokens(user):
     display_name = user.display_name.encode('utf8')
     display_name = 'x' + base64.urlsafe_b64encode(display_name)
     display_name = display_name.replace('=', '+')
-    return [display_name, 'everyone'] + user.groups
+    return [display_name] + [str(g) for g in user.groups]
 
 def parse_tokens(tokens):
     """Parse user information from a cookie.
