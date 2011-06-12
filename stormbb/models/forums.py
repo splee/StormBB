@@ -22,10 +22,11 @@ class Board(e.Document):
     mod_groups = e.ListField(e.StringField())
 
     def topics(self):
-        return Topic.objects(board=self).order_by('-last_update')
+        return Topic.objects(board=self).order_by('-is_sticky', '-last_update')
 
 class Topic(e.Document):
     board = e.ReferenceField(Board)
+    title = e.StringField()
     is_sticky = e.BooleanField(default=False)
     is_locked = e.BooleanField(default=False)
     creator = e.ReferenceField('User')
@@ -34,9 +35,13 @@ class Topic(e.Document):
     reply_count = e.IntField(default=0)
     view_count = e.IntField(default=0)
 
+    def messages(self):
+        return Message.objects(topic=self).order_by('created')
+
 class Message(e.Document):
     topic = e.ReferenceField(Topic)
     board = e.ReferenceField(Board)
     author = e.ReferenceField('User')
     created = e.DateTimeField(default=datetime.now)
+    title = e.StringField()
     body = e.StringField()
