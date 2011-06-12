@@ -1,10 +1,23 @@
 from stormbb.resources import Root
 from stormbb.views import user, root
+from stormbb.models import User
 from pyramid.config import Configurator
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.decorator import reify
+from pyramid.request import Request as PyramidRequest
 
-from mongoengine import connect
+authn = None
+authz = None
+
+class Request(PyramidRequest):
+    @reify
+    def user(self):
+        # TODO: Figure out a way of doing this sans globals. --Lee 2011-06-12
+        user_id = authn.cookie.identify(self)
+        if user_id:
+            return User.objects.with_id(user_id)
+
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -27,8 +40,11 @@ def main(global_config, **settings):
                     USER_DISPLAY_NAME=display_name,
                     USER_GROUPS=groups)
 
+    # TODO: hacky. I don't like this, but it works for now. --Lee
+    global authn
     authn = AuthTktAuthenticationPolicy('This is a secret. No, really... it is!',
                                         callback=get_groups)
+    global authz
     authz = ACLAuthorizationPolicy()
 
     config = Configurator(root_factory=Root,
@@ -36,10 +52,7 @@ def main(global_config, **settings):
                           renderer_globals_factory=renderer_globals,
                           authentication_policy=authn,
                           authorization_policy=authz)
-    #config.add_view('stormbb.views.my_view',
-    #                context='stormbb:resources.Root',
-    #                renderer='stormbb:templates/index.mak')
-
+    config.set_request_factory(Request)
     config.add_static_view('static', 'stormbb:static')
 
     # root views
@@ -47,9 +60,5 @@ def main(global_config, **settings):
     # user routes
     config.include(user)
 
-    # set up db
-    #db_uri = settings['db_uri']
-    #db_name = settings['db_name']
-    #connect(db_name)
     return config.make_wsgi_app()
 
