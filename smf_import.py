@@ -149,24 +149,39 @@ SELECT
     ,posterTime
     ,ID_MEMBER
     ,body
+    ,subject
 FROM
     smf_messages;"""
 
-    global bad_count
     c.execute(sql)
+
     for row in c.fetchall():
+        # try cleaning up the data here
+        body = row[5].decode('windows-1252')
+        title = row[6].decode('windows-1252')
+
         m = Message()
         m.topic = topics[row[1]]
         m.board = boards[row[2]]
         m.created = datetime.fromtimestamp(row[3])
         if row[4] > 0:
             m.author = members[row[4]]
-        m.body = row[5]
+        m.body = body
+        m.title = title
 
-        try:
-            m.save()
-        except UnicodeDecodeError, e:
-            bad_count += 1
+        dirty_topic = False
+        if not m.topic.title:
+            m.topic.title = title
+            dirty_topic = True
+
+        if not m.topic.last_update or m.created > m.topic.last_update:
+            m.topic.last_update = m.created
+            dirty_topic = True
+
+        if dirty_topic:
+            m.topic.save()
+
+        m.save()
 
     c.close()
 
