@@ -1,5 +1,6 @@
 import mongoengine as e
 from datetime import datetime
+from postmarkup import render_bbcode
 
 class Category(e.Document):
     name = e.StringField()
@@ -46,3 +47,16 @@ class Message(e.Document):
     created = e.DateTimeField(default=datetime.now)
     title = e.StringField()
     body = e.StringField()
+
+    @property
+    def rendered_body(self):
+        # SMF seemed to half render the content before it went to the db.
+        # Clean it up.
+        body = self.body
+        body = body.replace('<br />', '\n')
+        body = body.replace('&nbsp;', ' ')
+        body = body.replace('&quot;', "'")
+        body = body.replace('&#039;', "'")
+        body = body.replace('&amp;', '&')
+        return render_bbcode(body)
+
