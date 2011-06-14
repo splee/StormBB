@@ -47,16 +47,20 @@ class Message(e.Document):
     created = e.DateTimeField(default=datetime.now)
     title = e.StringField()
     body = e.StringField()
+    body_cache = e.StringField()
 
     @property
     def rendered_body(self):
-        # SMF seemed to half render the content before it went to the db.
-        # Clean it up.
-        body = self.body
-        body = body.replace('<br />', '\n')
-        body = body.replace('&nbsp;', ' ')
-        body = body.replace('&quot;', "'")
-        body = body.replace('&#039;', "'")
-        body = body.replace('&amp;', '&')
-        return render_bbcode(body)
+        if not self.body_cache:
+            # SMF seemed to half render the content before it went to the db.
+            # Clean it up.
+            body = self.body
+            body = body.replace('<br />', '\n')
+            body = body.replace('&nbsp;', ' ')
+            body = body.replace('&quot;', "'")
+            body = body.replace('&#039;', "'")
+            body = body.replace('&amp;', '&')
+            self.body_cache = render_bbcode(body)
+            self.save()
+        return self.body_cache
 
