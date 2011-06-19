@@ -30,7 +30,7 @@
 </head>
 <body>
 <div class="headbar">This is currently read only. To talk to real people,
-<a href="http://convore/tempest/">head over to Convore</a>.</div>
+<a href="http://convore.com/tempest/">head over to Convore</a>.</div>
 	
 	<!-- YOU CAN START WORKING IN THIS FILE RIGHT AWAY, JUST EDIT BELOW -->
 	<div class="grids">
