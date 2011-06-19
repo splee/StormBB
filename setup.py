@@ -11,6 +11,7 @@ requires = ['pyramid',
             'postmarkup',
             'mongoengine',
             'mako',
+            'gunicorn',
            ]
 
 setup(name='stormbb',
