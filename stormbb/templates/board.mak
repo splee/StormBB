@@ -2,16 +2,24 @@
 
 <%def name='title()'>${board.name}</%def>
 
-<h3>${board.name}</h3>
+<ol class="breadcrumb">
+	<li><a href="/">Boards</a></li>
+	<li>${board.name}</li>
+</ol>
 <p class=meta>${board.description}</p>
-
-<div class="topics">
-% for topic in board.topics():
-	<div class=topic style="margin: 1em; padding: 5px;">
-		<a href="/topic/${str(topic._id)}">${topic.title}</a>
-		<div>Replies: ${topic.reply_count}</div>
-		<div>Last Update: ${topic.last_update}</div>
-		<div>Sticky: ${topic.is_sticky}</div>
-	</div>
-% endfor
-</div>
+<table>
+	<tr>
+		<th>Title</th>
+		<th>Replies</th>
+		<th>Last Update</th>
+		<th>Sticky</th>
+	</tr>
+	% for topic in board.topics():
+	<tr>
+		<td><a href="/topic/${str(topic._id)}">${topic.title}</a></td>
+		<td>${topic.reply_count}</td>
+		<td>${topic.last_update}</td>
+		<td>${topic.is_sticky}</td>
+	</tr>
+	% endfor
+</table>

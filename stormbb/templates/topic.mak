@@ -2,18 +2,27 @@
 
 <%def name='title()'>${topic.title}</%def>
 
-<h3>${topic.title}</h3>
+<ol class="breadcrumb">
+	<li><a href="/">Boards</a></li>
+	<li><a href="/board/${str(topic.board._id)}">${topic.board.name}</a></li>
+	<li>${topic.title}</li>
+</ol>
 
-<div class="messages">
-% for message in topic.messages():
-	<div class=message style="margin: 1em; padding: 5px;">
-ID: ${message.id}
+<table>
+	<tr>
+		<th>Author</th>
+		<th>Message</th>
+	</tr>
+	% for message in topic.messages():
+	<tr>
+		<td>
 		% if message.author:
-			<p class=meta>Author: ${message.author.display_name}</p>
+			${message.author.display_name}
 		% else:
-			<p class=meta>Author: Unknown</p>
+			Unknown
 		% endif
-		<div class=message-body>${message.rendered_body}</div>
-	</div>
-% endfor
-</div>
+		</td>
+		<td>${message.rendered_body}</td>
+	</tr>
+	% endfor
+</table>
