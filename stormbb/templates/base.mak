@@ -25,6 +25,9 @@
 			margin-bottom: 5px;
 			text-align: center;
 		}
+		.wrap {
+			margin: 0 auto;
+		}
 	</style>
 </head> 
 </head>
@@ -33,7 +36,7 @@
 <a href="http://convore.com/tempest/">head over to Convore</a>.</div>
 	
 	<!-- YOU CAN START WORKING IN THIS FILE RIGHT AWAY, JUST EDIT BELOW -->
-	<div class="grids">
+	<div class="grids wrap">
 	
 		<div id="side" class="grid-4">
 			<h1><a href="/">Tempest PA</a></h1>
