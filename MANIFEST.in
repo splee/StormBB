@@ -1,0 +1,3 @@
+include stormbb/config/deployment.ini_tmpl
+recursive-include stormbb/public *
+recursive-include stormbb/templates *
