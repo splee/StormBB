@@ -24,6 +24,8 @@ class User(e.Document):
 
     groups = e.ListField(e.StringField())
 
+    is_admin = e.BooleanField(default=False)
+
     def verify_password(self, passwd):
         """Returns True if the password was correct, False if not.
         """

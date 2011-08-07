@@ -30,7 +30,6 @@
 		}
 	</style>
 </head> 
-</head>
 <body>
 <div class="headbar">This is currently read only. To talk to real people,
 <a href="http://convore.com/tempest/">head over to Convore</a>.</div>

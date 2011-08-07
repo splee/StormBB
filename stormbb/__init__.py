@@ -10,6 +10,9 @@ from pyramid.request import Request as PyramidRequest
 authn = None
 authz = None
 
+class AnonymousUser(object):
+    groups = ['everyone']
+
 class Request(PyramidRequest):
     @reify
     def user(self):
@@ -19,6 +22,7 @@ class Request(PyramidRequest):
             user_id = identity['userid']
             if user_id:
                 return User.objects.with_id(user_id)
+        return AnonymousUser()
 
 
 def main(global_config, **settings):
