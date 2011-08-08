@@ -1,0 +1,3 @@
+[submodule "deps/facebook"]
+	path = deps/facebook
+	url = https://github.com/facebook/python-sdk.git
