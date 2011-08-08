@@ -1,4 +1,4 @@
-<%inherit file='/base.mak' />
+<%inherit file='/base.mako' />
 
 <%def name='title()'>Index</%def>
 
@@ -7,7 +7,7 @@
 </ol>
 
 <table>
-	% for cat in categories:
+	% for cat in c.categories:
 		<thead>
 			<tr>
 				<th colspan="2">${cat.name}</th>

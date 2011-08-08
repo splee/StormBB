@@ -1,4 +1,4 @@
-<%inherit file='/base.mak' />
+<%inherit file='/base.mako' />
 
 <%def name='title()'>${board.name}</%def>
 
