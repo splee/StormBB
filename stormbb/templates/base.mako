@@ -7,8 +7,8 @@
 	<title>${self.title()} - Tempest Forums</title>
 	
 	<!-- The framework -->
-	<link rel="stylesheet" href="/static/css/inuit.css" />
-	<link rel="stylesheet" href="/static/css/breadcrumb.inuit.css" />
+	<link rel="stylesheet" href="/css/inuit.css" />
+	<link rel="stylesheet" href="/css/breadcrumb.inuit.css" />
 	
 	<style>
 		.hidden {
@@ -33,21 +33,21 @@
 <body>
 <div class="headbar">This is currently read only. To talk to real people,
 <a href="http://convore.com/tempest/">head over to Convore</a>.</div>
+<div id='fb-root'></div>
 	
 	<!-- YOU CAN START WORKING IN THIS FILE RIGHT AWAY, JUST EDIT BELOW -->
 	<div class="grids wrap">
 	
 		<div id="side" class="grid-4">
 			<h1><a href="/">Tempest PA</a></h1>
-			% if USER_ID:
+            % if not c.user.username == '__ANONYMOUS__':
 				<p>
-					Welcome back, ${USER_DISPLAY_NAME}!
-					<a href="/logout">Log Out</a>
+					Welcome ${c.user.username}!
 				</p>
 			% else:
 				<p>
 					Welcome to the forums.
-					<a href="/login">Log In</a>
+                    <fb:login-button>Login with Facebook</fb:login-button>
 				</p>
 			% endif
 		</div>
@@ -59,7 +59,14 @@
 	</div>
 	
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js"></script>
+<script src="http://connect.facebook.net/en_US/all.js">
+</script>
+<script>
+    FB.init({ 
+        appId:'158337420907517', cookie:true, 
+        status:true, xfbml:true 
+    });
 </script>
 <script>
 	${self.js()}

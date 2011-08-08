@@ -2,6 +2,7 @@
 
 from beaker.cache import CacheManager
 from beaker.util import parse_cache_config_options
+from pylons import config
 
 class Globals(object):
     """Globals acts as a container for objects available throughout the

@@ -1,5 +1,5 @@
 from mongoengine import connect
-from user import User
+from user import User, FacebookAuth, TwitterAuth
 from forums import Category, Board, Topic, Message
 
 # connect

@@ -46,3 +46,34 @@ class FacebookController(BaseController):
 
         # we shouldn't have got here, method not allowed bitches
         abort(405)
+
+    def existing(self):
+        cookie = request.fb_cookie
+        if not cookie:
+            abort(500)
+
+        if not request.method == 'POST':
+            abort(405)
+
+        try:
+            username = request.POST['username']
+            password = request.POST['password']
+        except KeyError, e:
+            abort(418)
+
+        # get the user by username
+        try:
+            user = User.objects.get(username=username)
+            if not user.verify_password(password):
+                raise ValueError("Incorrect password")
+        except (ValueError, User.DoesNotExist), e:
+            graph = facebook.GraphAPI(cookie['access_token'])
+            c.profile = graph.get_object('me')
+            c.error = 'Incorrect Username or Password'
+            return render('/auth/facebook/new.mako')
+
+        # This user has earned the right to claim their old account.
+        user.facebook_auth = request.fb_auth
+        user.save()
+        redirect('/')
+

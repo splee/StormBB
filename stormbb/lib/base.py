@@ -2,17 +2,23 @@
 
 Provides the BaseController class for subclassing.
 """
-from stormbb.model import User
+from stormbb.model import User, FacebookAuth
 from stormbb.lib import facebook
-from pylons import config, request, response
+from pylons import config, request, response, tmpl_context
 from pylons.controllers import WSGIController
 from pylons.controllers.util import redirect
 from pylons.templating import render_mako as render
 
+signup_path_base = '/auth/facebook'
+signup_path = "%s/new" % signup_path_base
+def redirect_to_signup():
+    if not request.path.startswith(signup_path_base):
+        redirect(signup_path)
 
 class AnonymousUser(object):
     """A dummy class used to identify an anonymous user.
     """
+    username = '__ANONYMOUS__'
     groups = ['everyone']
 
 class BaseController(WSGIController):
@@ -28,6 +34,7 @@ class BaseController(WSGIController):
         # set up the default values
         request.user = AnonymousUser()
         request.fb_cookie = None
+        request.fb_auth = None
 
         # check facebook cookies first
         fb_cookie = facebook.get_user_from_cookie(request.cookies,
@@ -35,16 +42,18 @@ class BaseController(WSGIController):
                                                   config['facebook.app_secret'])
         if fb_cookie:
             request.fb_cookie = fb_cookie
+            # get the facebook auth object
+            fb_auth, created = FacebookAuth.objects.get_or_create(user_id=fb_cookie['uid'])
+            request.fb_auth = fb_auth
+
+            if not fb_auth.access_token == fb_cookie['access_token']:
+                fb_auth.access_token = fb_cookie['access_token']
+                fb_auth.save()
+
             try:
-                user = User.objects.get(fb_user_id=fb_cookie['uid'])
+                user = User.objects.get(facebook_auth=fb_auth)
+                request.user = user
             except User.DoesNotExist, e:
-                # redirect to facebook signup page if we are not already there
-                signup_path = '/auth/facebook/new'
-                if not request.path == signup_path:
-                    redirect(signup_path)
+                redirect_to_signup()
 
-            if not user.fb_access_token == fb_cookie['access_token']:
-                user.fb_access_token = fb_cookie['access_token']
-                user.save()
-
-            request.user = user
+        tmpl_context.user = request.user
