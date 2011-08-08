@@ -67,6 +67,9 @@
         appId:'158337420907517', cookie:true, 
         status:true, xfbml:true 
     });
+    FB.Event.subscribe('auth.login', function(response) {
+        window.location.reload();
+    });
 </script>
 <script>
 	${self.js()}
